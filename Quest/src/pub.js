@@ -18,7 +18,8 @@ async function run() {
         //await sock.send("example>task?>Jens Vanhulst>");
 	//await sock.send("example>answer?>Kasper Toetenel>CORONA-FREE-CHANNEL>206aa41b473514e5a306e7d2d2ebd08d159e9bfe>*HATSJU*>");
         await sock.send("example>answer?>Jens Vanhulst>CORONA-FREE-CHANNEL>206aa41b473514e5a306e7d2d2ebd08d159e9bfe>*HATSJU*>");
-    } catch (e) {
+    } catch (e) 
+	{
         console.log(e);
     }
     sock.disconnect(BROKER_URL)
