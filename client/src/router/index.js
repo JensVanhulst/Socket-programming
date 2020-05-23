@@ -1,6 +1,10 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
+// Games
+import ConnectFour from '../views/ConnectFour.vue';
+import TicTacToe from '../views/TicTacToe.vue';
+
 
 Vue.use(VueRouter);
 
@@ -11,12 +15,14 @@ const routes = [
     component: Home,
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    path: '/connect-four',
+    name: 'ConnectFour',
+    component: ConnectFour,
+  },
+  {
+    path: '/tic-tac-toe',
+    name: 'TicTacToe',
+    component: TicTacToe,
   },
 ];
 
