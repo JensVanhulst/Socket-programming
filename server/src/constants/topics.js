@@ -1,13 +1,15 @@
 /** @format */
 
 module.exports = {
-  // Connect FOUR
-  JOIN: 'conn4>tournament>name>join>',
+
+  // Chat
   RAW_MESSAGES: 'NP_KT_JV>lobby>raw_messages>',
   FILTERED_MESSAGES: 'NP_KT_JV>lobby>filtered_messages>',
+  
+  // Connect FOUR
   CONNECT_FOUR: 'NP_KT_JV>lobby>connectfour>',
   CONNECT_FOUR_JOIN: 'NP_KT_JV>lobby>connectfour>',
-  TICTACTOE_JOIN : 'NP_KT_JV>lobby>tic-tac-toe>join>',
 
   // TicTacToe
+  TICTACTOE_JOIN : 'NP_KT_JV>lobby>tic-tac-toe>',
 };
