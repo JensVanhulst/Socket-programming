@@ -12,51 +12,69 @@
         <v-row class="justify-center">
           <v-col cols="3">
             <v-card class="ttt-field" @click="place('ttt-00')">
-              <h1>{{ board[0][0] }}</h1>
+              <v-card-title primary-title class="justify-center">
+                <h1 class="center">{{ board[0][0] }}</h1>
+              </v-card-title>
             </v-card>
           </v-col>
           <v-col cols="3">
             <v-card class="ttt-field" @click="place('ttt-01')">
-              <h1>{{ board[0][1] }}</h1>
+              <v-card-title primary-title class="justify-center">
+                <h1 class="center">{{ board[0][1] }}</h1>
+              </v-card-title>
             </v-card>
           </v-col>
           <v-col cols="3">
             <v-card class="ttt-field" @click="place('ttt-02')">
-              <h1>{{ board[0][2] }}</h1>
+              <v-card-title primary-title class="justify-center">
+                <h1 class="center">{{ board[0][2] }}</h1>
+              </v-card-title>
             </v-card>
           </v-col>
         </v-row>
         <v-row class="justify-center">
           <v-col cols="3">
             <v-card class="ttt-field" @click="place('ttt-10')">
-              <h1>{{ board[1][0] }}</h1>
+              <v-card-title primary-title class="justify-center">
+                <h1 class="center">{{ board[1][0] }}</h1>
+              </v-card-title>
             </v-card>
           </v-col>
           <v-col cols="3">
             <v-card class="ttt-field" @click="place('ttt-11')">
-              <h1>{{ board[1][1] }}</h1>
+              <v-card-title primary-title class="justify-center">
+                <h1 class="center">{{ board[1][1] }}</h1>
+              </v-card-title>
             </v-card>
           </v-col>
           <v-col cols="3">
             <v-card class="ttt-field" @click="place('ttt-12')">
-              <h1>{{ board[1][2] }}</h1>
+              <v-card-title primary-title class="justify-center">
+                <h1 class="center">{{ board[1][2] }}</h1>
+              </v-card-title>
             </v-card>
           </v-col>
         </v-row>
         <v-row class="justify-center">
           <v-col cols="3">
             <v-card class="ttt-field" @click="place('ttt-20')">
-              <h1>{{ board[2][0] }}</h1>
+              <v-card-title primary-title class="justify-center">
+                <h1 class="center">{{ board[2][0] }}</h1>
+              </v-card-title>
             </v-card>
           </v-col>
           <v-col cols="3">
             <v-card class="ttt-field" @click="place('ttt-21')">
-              <h1>{{ board[2][1] }}</h1>
+              <v-card-title primary-title class="justify-center">
+                <h1 class="center">{{ board[2][1] }}</h1>
+              </v-card-title>
             </v-card>
           </v-col>
           <v-col cols="3">
             <v-card class="ttt-field" @click="place('ttt-22')">
-              <h1>{{ board[2][2] }}</h1>
+              <v-card-title primary-title class="justify-center">
+                <h1 class="center">{{ board[2][2] }}</h1>
+              </v-card-title>
             </v-card>
           </v-col>
         </v-row>
@@ -72,6 +90,21 @@
             Back to lobby
         </v-btn> -->
     </v-overlay>
+
+    <v-dialog v-model="modal" max-width="290">
+      <v-card>
+        <v-card-title class="headline">{{ winner }} has won the Game.</v-card-title>
+        <v-card-text>
+          The player has won with {{ typeOfWin }} Please return to the lobby.
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="returnToLobby">
+            Return to lobby
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -87,10 +120,13 @@ export default {
         ['', '', ''],
         ['', '', ''],
       ],
+      modal: false,
       waiting: true,
       subscriber: new zmq.Subscriber(),
       publisher: new zmq.Push(),
       playerturn: '',
+      typeOfWin: '',
+      winner: '',
     };
   },
   async mounted() {
@@ -98,7 +134,6 @@ export default {
       await this.subscriber.connect('tcp://193.190.154.184:24042');
       await this.subscriber.subscribe('NP_KT_JV>lobby>tic-tac-toe>');
       await this.publisher.connect('tcp://193.190.154.184:24041');
-      console.log('Connected and subbed from home.');
     } catch (error) {
       console.log(error);
     }
@@ -114,16 +149,25 @@ export default {
       } else if (messages.toString().includes('NP_KT_JV>lobby>tic-tac-toe>gameupdate>')) {
         // We Get this: NP_KT_JV>lobby>tic-tac-toe>gameupdate>Kasper&0&0&X
         let gameUpdate = messages.toString().replace('NP_KT_JV>lobby>tic-tac-toe>gameupdate>', '');
-        let [playerTurn, x, y, X_O_Move] = gameUpdate.toString().split('&');
+        let [playerTurn, x, y, X_O_Move, winner, winType] = gameUpdate.toString().split('&');
         //this.board[x][y] = X_O_Move.toString();
-        this.playerturn = playerTurn; 
-        console.log(this.board[parseInt(x)][parseInt(y)]);
+        this.playerturn = playerTurn;
+        if (winner != 'no-winner') {
+          this.typeOfWin = winType;
+          this.winner = winner;
+          this.modal = true;
+        }
         this.board[parseInt(x)][parseInt(y)] = X_O_Move.toString();
       }
     }
   },
 
   methods: {
+    returnToLobby() {
+      this.modal = false;
+      // TODO : SEND MESSAGE TO CLEAR ON SERVER
+      this.$router.push({ path: '/' });
+    },
     async place(id) {
       // SEND: NP_KT_JV>lobby>tic-tac-toe>place>Jens&ttt-11>
       await this.publisher.send(`NP_KT_JV>lobby>tic-tac-toe>place>${this.username}&${id}`);
@@ -136,5 +180,13 @@ export default {
 .ttt-field {
   height: 200px;
   width: 200px;
+}
+.center {
+  font-size: 80px;
+  font-weight: 900;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

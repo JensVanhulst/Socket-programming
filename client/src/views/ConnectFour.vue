@@ -154,14 +154,12 @@ export default {
       await this.subscriber.connect('tcp://193.190.154.184:24042');
       await this.subscriber.subscribe('NP_KT_JV>lobby>connectfour>');
       await this.publisher.connect('tcp://193.190.154.184:24041');
-      console.log('Connected and subbed from home');
     } catch (error) {
       console.log(error);
     }
     /* eslint-disable */
     for await (const messages of this.subscriber) {
       // TODO : MAKE TOPIC TO info>join>name
-      console.log('KASPRTESTJE', messages.toString())
       if (messages.toString().includes('connectfour>info>join>')) {
         const [, status] = messages.toString().split('NP_KT_JV>lobby>connectfour>info>join>');
         if (status === 'full') {
@@ -187,7 +185,6 @@ export default {
       this.$router.push({ path: '/' });
     },
     async checkHorizontalWin() {
-      console.log(this.board);
       for (let r = 0; r <= 5; r++) {
         for (let c = 0; c <= 3; c++) {
           if (
@@ -252,7 +249,6 @@ export default {
     async drop(index) {
       try {
         await this.publisher.send(`NP_KT_JV>lobby>connectfour>move>${this.username}&${index}`);
-        console.log('SEND MESSAGE');
       } catch (error) {
         console.log(error);
       }

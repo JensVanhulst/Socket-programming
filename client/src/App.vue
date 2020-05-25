@@ -1,9 +1,10 @@
 <template>
   <v-app>
+    <!-- TODO: BACK BEFORE WIN -->
     <v-app-bar app clipped-right color="primary" dark>
-      <v-icon @click="$router.push({ path: '/' })" v-if="$route.name !== 'Home'">
+      <!-- <v-icon @click="$router.push({ path: '/' })" v-if="$route.name !== 'Home'">
         mdi-arrow-left-thick
-      </v-icon>
+      </v-icon> -->
       <h1 class="ml-3">PXL Network programming</h1>
     </v-app-bar>
     <v-navigation-drawer class="bg-lightgrey" app clipped absolute permanent right width="300px">
@@ -25,8 +26,8 @@
                 <v-divider v-if="item.divider" :key="index"></v-divider>
                 <v-list-item v-else :key="index">
                   <v-list-item-content>
-                    <v-list-item-title>{{item.title}}</v-list-item-title>
-                    <v-list-item-subtitle>{{item.subtitle}}</v-list-item-subtitle>
+                    <v-list-item-title color="primary">{{ item.title }}</v-list-item-title>
+                    <v-list-item-subtitle color="error">{{ item.subtitle }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
               </template>
@@ -39,8 +40,7 @@
         <v-container class="bg-white">
           <v-row class="mt-5">
             <v-col cols="8">
-              <v-text-field v-model="chatMessage" dense label="Message" outlined>
-              </v-text-field>
+              <v-text-field v-model="chatMessage" dense label="Message" outlined> </v-text-field>
             </v-col>
             <v-col cols="2">
               <v-btn @click="sendMessage()" color="success">Send</v-btn>
@@ -54,14 +54,27 @@
         <router-view :username="user"></router-view>
       </transition>
     </v-content>
-      <v-overlay absolute opacity="0.8" :value="overlay">
-          <v-form>
-            <v-text-field v-model="user" type="text" outlined></v-text-field>
-          </v-form>
-        <v-btn color="orange lighten-2" @click="overlay = false">
-          Create username
-        </v-btn>
-      </v-overlay>
+    <v-overlay absolute opacity="0.8" :value="overlay">
+      <v-form>
+        <v-text-field v-model="user" type="text" outlined></v-text-field>
+      </v-form>
+      <v-btn color="orange lighten-2" @click="overlay = false">
+        Create username
+      </v-btn>
+    </v-overlay>
+
+    <v-overlay absolute opacity="0.8" :value="overlayMeme">
+      <v-container>
+        <v-img class="meme pa-5 ma-5" :src="imageUrl"></v-img>
+        <v-row>
+          <v-col cols="12" align="center">
+            <v-btn dense color="orange lighten-2" @click="overlayMeme = false">
+              close
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-overlay>
   </v-app>
 </template>
 
@@ -71,10 +84,14 @@ const zmq = require('zeromq');
 export default {
   data() {
     return {
+      img: '',
+      aspect_ratio: 0,
       user: '',
       overlay: true,
+      overlayMeme: false,
       publisher: new zmq.Push(),
       chatMessage: '',
+      imageUrl: '',
       items: [
         // { divider: true, inset: true },
       ],
@@ -88,23 +105,33 @@ export default {
     const subsciber = new zmq.Subscriber();
     await subsciber.connect('tcp://193.190.154.184:24042');
     await subsciber.subscribe('NP_KT_JV>lobby>filtered_messages>');
-
+    await subsciber.subscribe('NP_KT_JV>lobby>message>meme>');
     await this.publisher.connect('tcp://193.190.154.184:24041');
 
     /* eslint-disable */
     for await (const messages of subsciber) {
-      const [, msg] = messages.toString().split('NP_KT_JV>lobby>filtered_messages>');
-      const [name, message] = msg.split('&');
-      this.items.push({title: name, subtitle: message});
-      this.items.push({ divider: true, inset: true });
+      if (messages.toString().includes('>meme')) {
+        const [, meme] = messages.toString().split('NP_KT_JV>lobby>message>meme>');
+        const [name, url] = meme.split('&');
+
+        if (name === this.user) {
+          this.imageUrl = url;
+          this.overlayMeme = true;
+        }
+      } else if (messages.toString().includes('filtered_messages')) {
+        const [, msg] = messages.toString().split('NP_KT_JV>lobby>filtered_messages>');
+        const [name, message] = msg.split('&');
+        this.items.push({ title: name, subtitle: message });
+        this.items.push({ divider: true, inset: true });
+      }
     }
   },
   methods: {
     async sendMessage() {
       await this.publisher.send(`NP_KT_JV>lobby>raw_messages>${this.user}&${this.chatMessage}`);
       this.chatMessage = '';
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -136,5 +163,16 @@ export default {
 }
 .chat-window {
   display: block;
+}
+
+.v-list-item__title {
+  color: rgb(25, 116, 207);
+}
+.v-list-item__subtitle {
+  color: rgb(0, 0, 0) !important;
+}
+
+.meme {
+  width: 300px;
 }
 </style>

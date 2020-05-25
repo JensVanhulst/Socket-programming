@@ -12,4 +12,10 @@ module.exports = {
 
   // TicTacToe
   TICTACTOE_JOIN : 'NP_KT_JV>lobby>tic-tac-toe>',
+
+  // Raspberry
+  RASPBERRY :  'NP_KT_JV>raspberry>alerts>',
+
+  // Meme
+  MEME : 'NP_KT_JV>lobby>message>meme>'
 };

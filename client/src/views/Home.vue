@@ -94,7 +94,6 @@ export default {
     async joinTicTacToe() {
       try {
         await this.publisher.send(`NP_KT_JV>lobby>tic-tac-toe>join>player>${this.username}`);
-        console.log('send :>> ');
       } catch (error) {
         console.log(error);
       }

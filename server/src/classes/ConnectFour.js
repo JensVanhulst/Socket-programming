@@ -32,7 +32,6 @@ class ConnectFour {
   reset() {
     this.players = [];
     this.board = this.initialBoard;
-    console.log('GAME RESET');
   }
 
   addPlayer(name) {

@@ -98,7 +98,7 @@ make sure you have the following tools installed on your system.
 
 ## People
 
-- **Jens Vanhulst** - _CONTRIBUTOR_ - [JensVanhulst](https://github.com/JensVanhulst)
+- **Jens Vanhulst** - _CONTRIBUTOR_ - [Jens Vanhulst](https://github.com/JensVanhulst)
 - **Kasper Toetenel** - _CONTRIBUTOR_ - [Kasper Toetenel](https://github.com/SheldonPi1999)
 
 ## Questions

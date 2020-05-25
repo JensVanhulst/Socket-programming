@@ -2,9 +2,12 @@
 
 const ConnectFour = require('./classes/ConnectFour');
 const TicTacToe = require('./classes/TicTacToe');
+const getMeme = require('./api');
+
 const { filterMessage, topics, push } = require('./utils');
 const connectFour = new ConnectFour(2);
 const ticTacToe = new TicTacToe(2);
+
 
 const handleTicTacToe = async (messages) => {
   //NP_KT_JV>lobby>tic-tac-toe>join>player>Jens
@@ -20,7 +23,6 @@ const handleTicTacToe = async (messages) => {
       setTimeout(async () => {
         await push.send('NP_KT_JV>lobby>tic-tac-toe>info>join>full');
       }, 2000);
-      console.log('full');
     }
   }
   // INCOMING: NP_KT_JV>lobby>tic-tac-toe>place>Jens&ttt-11>
@@ -29,11 +31,14 @@ const handleTicTacToe = async (messages) => {
     const [name, move] = arguments.split('&');
     const [x,y] =  move.toString().replace('ttt-', '');
 
-    const serverResponse = ticTacToe.place(name, x, y);;
-    console.log('SERVER RESPONSE', serverResponse);
+    const serverResponse = ticTacToe.place(name, x, y);
+    if(serverResponse.winner !== 'no-winner') 
+    {
+      ticTacToe.reset();
+    }
     try {
       await push.send(
-        `NP_KT_JV>lobby>tic-tac-toe>gameupdate>${serverResponse.playerTurn}&${serverResponse.x}&${serverResponse.y}&${serverResponse.X_O_Move}`,
+        `NP_KT_JV>lobby>tic-tac-toe>gameupdate>${serverResponse.playerTurn}&${serverResponse.x}&${serverResponse.y}&${serverResponse.X_O_Move}&${serverResponse.winner}&${serverResponse.type}`,
       );
     } catch (error) {
       console.log(error);
@@ -57,7 +62,6 @@ const handleConnectFour = async (messages) => {
       setTimeout(async () => {
         await push.send('NP_KT_JV>lobby>connectfour>info>join>full');
       }, 2000);
-      console.log('full');
     }
   } else if (command.includes('move>')) {
     // INPUT : move>Jens&6
@@ -65,7 +69,6 @@ const handleConnectFour = async (messages) => {
     //INPUT : Jens&6
     const [name, column] = data.split('&');
     const serverResponse = connectFour.move(name, column);
-    console.log('SERVER RESPONSE', serverResponse);
 
     //color&x&y&turn
     try {
@@ -80,10 +83,22 @@ const handleConnectFour = async (messages) => {
   }
 };
 
-const handleChatMessage = (messages) => {
+const handleChatMessage = async (messages) => {
   const [, msg] = messages.toString().split(topics.RAW_MESSAGES);
   const [name, message] = msg.split('&');
-  filterMessage(name, message);
+  if (message === '!meme' || message === '!bart')
+  {
+    let url = await getMeme();
+    try {
+      console.log(url);
+      await push.send(topics.MEME + name + '&' + url);
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    filterMessage(name, message);
+  }
+
 };
 
 module.exports = {
