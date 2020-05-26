@@ -34,7 +34,6 @@ This is a web-based ZeroMQ game lobby with chat functionality and 2 games. [TicT
 ## Table of Contents
 - [GameLobby](#gamelobby)
   - [Table of Contents](#table-of-contents)
-  - [- License](#ullilicenseliul)
   - [Getting Started](#getting-started)
   - [Installation & setup](#installation--setup)
   - [Installation for development](#installation-for-development)
