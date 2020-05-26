@@ -8,34 +8,45 @@
    <a href="https://opensource.org/licenses/MIT">
     <img alt="GitHub" src="https://img.shields.io/github/license/JensVanhulst/IOT-Dashboard?style=for-the-badge">
   </a>
-
-<!--
-
   <a href="https://github.com/JensVanhulst/PXL_socket-programming/releases">
-    <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/JensVanhulst/IOT-Dashboard?include_prereleases&style=for-the-badge">
+    <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/JensVanhulst/PXL-socket-programming?include_prereleases&style=for-the-badge">
   </a>
-
   <a href="https://github.com/JensVanhulst/PXL_socket-programming/issues">
-    <img alt="GitHub issues" src="https://img.shields.io/github/issues/JensVanhulst/IOT-Dashboard?style=for-the-badge">
+    <img alt="GitHub issues" src="https://img.shields.io/github/issues/JensVanhulst/PXL-socket-programming?style=for-the-badge">
   </a>
 
   <a href="https://github.com/JensVanhulst/PXL_socket-programming/graphs/contributors">
-    <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/JensVanhulst/IOT-Dashboard?style=for-the-badge" alt="Contributions">
+    <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/JensVanhulst/PXL-socket-programming?style=for-the-badge" alt="Contributions">
   </a>
 
   <a href="#">
-    <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/JensVanhulst/IOT-Dashboard?style=for-the-badge" alt="Language">
+    <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/JensVanhulst/PXL-socket-programming?style=for-the-badge" alt="Language">
   </a>
 </p>
--->
+
 
 
 # Game_Lobby
-
----
+This is a web-based ZeroMQ game lobby with chat functionality and 2 games. [TicTacToe & Connect4] 
 
 ## Table of Contents
-
+- [Game_Lobby](#game_lobby)
+  - [Table of Contents](#table-of-contents)
+  - [- License](#ullilicenseliul)
+  - [Getting Started](#getting-started)
+  - [Installation & setup](#installation--setup)
+  - [Installation for development](#installation-for-development)
+    - [Clone](#clone)
+    - [Setup](#setup)
+    - [To run development server (client)](#to-run-development-server-client)
+    - [To run development server (server)](#to-run-development-server-server)
+    - [Build application (client)](#build-application-client)
+  - [Installation](#installation)
+  - [Documentation](#documentation)
+  - [People](#people)
+  - [Questions](#questions)
+  - [Issues](#issues)
+  - [License](#license)
 ---
 
 ## Getting Started
@@ -48,10 +59,10 @@ make sure you have the following tools installed on your system.
 
 > Required tools
 
-| Software name  | Version  | Link                         |
-|----------------|----------| ---------------------------- |
-
-
+| Software name  | Version  | Link                                 |
+|----------------|----------| ------------------------------------ |
+| Nodejs         | v12.16.2 | https://nodejs.org/en/               |
+| ZeroMQ.js      | v6.0.0   | https://github.com/zeromq/zeromq.js/ |
 > Recommended tools
 
 | Software name      | Version | Link                               |
@@ -70,31 +81,76 @@ make sure you have the following tools installed on your system.
 
 ### To run development server (client)
 
+> Change to directory
+
+```sh
+cd PXL-socket-programming
+cd client
+```
+> Start local development environment
+
+```sh
+npm run electron:serve
+```
+
+This will start an electron window on `http://localhost:8081`
+
 
 ### To run development server (server)
 
+> Change to server directory
+
+```sh
+cd PXL-socket-programming
+cd server
+```
+> Start local development environment
+
+```sh
+npm run dev
+```
+
+This will start a local server instance on port `3000`
 
 ### Build application (client)
 
+> On mac
+```sh
+npm run electron:build
+```
 
-### Build application (server)
+> On windows
+
+⚠️Please remove following code from `vue.config.js` ⚠️
+
+```js 
+pluginOptions: {
+    electronBuilder: {
+      builderOptions: {
+        appId: 'PXL-Socket-Programming',
+        mac: {
+          target: 'pkg',
+        },
+
+      },
+    },
+  },
+```
 
 
-## Installation for production
+```sh
+npm run electron:build
+```
 
-<!-- - Install the electron version
-  - Go to [Releases](https://github.com/JensVanhulst/IOT-Dashboard/releases) and pick your operating system package
--->
+
+## Installation 
+  - Go to [Releases](https://github.com/JensVanhulst/PXL-socket-programming/releases) and pick your operating system package
+
 
 ## Documentation
 
-<!-- To check out the docs, visit [Documentation](https://vanhulstjens.gitbook.io/iot-dashboard/).
--->
+To check out the docs, visit [Documentation](https://github.com/JensVanhulst/PXL-socket-programming/wiki).
 
-## Versioning
-
-<!-- We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
--->
 
 ## People
 
