@@ -9,6 +9,7 @@
     <img alt="GitHub" src="https://img.shields.io/github/license/JensVanhulst/IOT-Dashboard?style=for-the-badge">
   </a>
   <a href="https://github.com/JensVanhulst/PXL_socket-programming/releases">
+    <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/JensVanhulst/PXL-socket-programming?include_prereleases&style=for-the-badge">
   </a>
 
   <a href="https://github.com/JensVanhulst/PXL_socket-programming/issues">
