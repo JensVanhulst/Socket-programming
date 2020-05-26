@@ -28,11 +28,11 @@
 
 
 
-# Game_Lobby
+# GameLobby
 This is a web-based ZeroMQ game lobby with chat functionality and 2 games. [TicTacToe & Connect4] 
 
 ## Table of Contents
-- [Game_Lobby](#game_lobby)
+- [GameLobby](#gamelobby)
   - [Table of Contents](#table-of-contents)
   - [- License](#ullilicenseliul)
   - [Getting Started](#getting-started)
