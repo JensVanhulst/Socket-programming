@@ -1,0 +1,25 @@
+/** @format */
+
+module.exports = [
+  'fak',
+  'loser',
+  'asshole',
+  'wanker',
+  'kkr',
+  'kanker',
+  'shit',
+  'shitface',
+  'fatty',
+  'dikzak',
+  'klootzak',
+  'bastard',
+  'curva',
+  'bitch',
+  'Fuck you',
+  'mongool',
+  'kutwijf',
+  'kloothommel',
+  'shit',
+  'bakkes',
+  'mongol',
+];
