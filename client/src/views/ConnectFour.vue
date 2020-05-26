@@ -219,17 +219,17 @@ export default {
 
     // TODO : to be fixed
     async checkDiagonalWin() {
-      for (let r = 0; r <= 5; r++) 
+      for (let r = 0; r <= 5; r++)
       {
-        for (let c = 0; c <= 3; c++) 
+        for (let c = 0; c <= 3; c++)
         {
           if(
-              (c < 3 && 
+              (c < 3 &&
                 (this.board[r][c] == this.board[r + 1][c + 1] && this.board[r + 1][r + 1] == this.board[r + 2][c + 2] && this.board[r + 2][r + 2] == this.board[r + 3][r + 3] && (this.board[r + 3][c + 3] == 'yellow' || this.board[r + 3][c + 3] == 'red'))
               )
 
                ||
-              (c >= 3 && 
+              (c >= 3 &&
                (this.board[r][c] == this.board[r - 1][c - 1] && this.board[r - 1][r - 1] == this.board[r - 2][c - 2] && this.board[r - 2][r - 2] == this.board[r - 3][r - 3] && (this.board[r - 3][c - 3] == 'yellow' || this.board[r - 3][c - 3] == 'red'))
               )
             )
