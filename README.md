@@ -6,16 +6,18 @@
 
 <p align="center">
    <a href="https://opensource.org/licenses/MIT">
-    <img alt="GitHub" src="https://img.shields.io/github/license/JensVanhulst/IOT-Dashboard?style=for-the-badge">
+    <img alt="GitHub" src="https://img.shields.io/github/license/JensVanhulst/PXL-socket-programming?style=for-the-badge">
   </a>
-  <a href="https://github.com/JensVanhulst/PXL_socket-programming/releases">
+
+  <a href="https://github.com/JensVanhulst/PXL-socket-programming/releases">
     <img alt="GitHub release (latest by date including pre-releases)" src="https://img.shields.io/github/v/release/JensVanhulst/PXL-socket-programming?include_prereleases&style=for-the-badge">
   </a>
-  <a href="https://github.com/JensVanhulst/PXL_socket-programming/issues">
+
+  <a href="https://github.com/JensVanhulst/PXL-socket-programming/issues">
     <img alt="GitHub issues" src="https://img.shields.io/github/issues/JensVanhulst/PXL-socket-programming?style=for-the-badge">
   </a>
 
-  <a href="https://github.com/JensVanhulst/PXL_socket-programming/graphs/contributors">
+  <a href="https://github.com/JensVanhulst/PXL-socket-programming/graphs/contributors">
     <img alt="GitHub contributors" src="https://img.shields.io/github/contributors/JensVanhulst/PXL-socket-programming?style=for-the-badge" alt="Contributions">
   </a>
 
