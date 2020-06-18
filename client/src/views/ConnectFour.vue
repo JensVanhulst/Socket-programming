@@ -124,6 +124,8 @@
 </template>
 
 <script>
+import constants from '../constants';
+
 const zmq = require('zeromq');
 
 export default {
@@ -151,23 +153,23 @@ export default {
   },
   async mounted() {
     try {
-      await this.subscriber.connect('tcp://193.190.154.184:24042');
-      await this.subscriber.subscribe('NP_KT_JV>lobby>connectfour>');
-      await this.publisher.connect('tcp://193.190.154.184:24041');
+      await this.subscriber.connect(constants.broker.SERVER_PUB);
+      await this.subscriber.subscribe(constants.topics.BASE_TOPIC);
+      await this.publisher.connect(constants.broker.SERVER_PULL);
     } catch (error) {
       console.log(error);
     }
     /* eslint-disable */
     for await (const messages of this.subscriber) {
       // TODO : MAKE TOPIC TO info>join>name
-      if (messages.toString().includes('connectfour>info>join>')) {
-        const [, status] = messages.toString().split('NP_KT_JV>lobby>connectfour>info>join>');
+      if (messages.toString().includes(constants.topics.games.CF.JOIN.BASE)) {
+        const [, status] = messages.toString().split(constants.topics.games.CF.JOIN.BASE);
         if (status === 'full') {
           this.waiting = false;
         }
-      } else if (messages.toString().includes('>connectfour>gameupdate>')) {
+      } else if (messages.toString().includes(constants.topics.games.CF.GAME_UPDATE)) {
         //${serverResponse.color}&${serverResponse.column}&${serverResponse.row}&${serverResponse.playerturn}`);
-        let gameUpdate = messages.toString().replace('NP_KT_JV>lobby>connectfour>gameupdate>', '');
+        let gameUpdate = messages.toString().replace(constants.topics.games.CF.GAME_UPDATE, '');
         let [color, col, row, playerturn] = gameUpdate.toString().split('&');
         this.board[row][col] = color;
         this.playerTurn = playerturn;
@@ -195,7 +197,7 @@ export default {
           ) {
             this.modal = true;
             this.typeOfWin = 'Horizontal row';
-            await this.publisher.send('NP_KT_JV>lobby>connectfour>finish');
+            await this.publisher.send(constants.topics.games.CF.FINISH);
           }
         }
       }
@@ -211,7 +213,7 @@ export default {
           ) {
             this.modal = true;
             this.typeOfWin = 'Vertical row';
-            await this.publisher.send('NP_KT_JV>lobby>connectfour>finish');
+            await this.publisher.send(constants.topics.games.CF.FINISH);
           }
         }
       }
@@ -236,19 +238,14 @@ export default {
           {
             this.modal = true;
             this.typeOfWin = 'Diagonal row';
-            await this.publisher.send('NP_KT_JV>lobby>connectfour>finish');
+            await this.publisher.send(constants.topics.games.CF.FINISH);
           }
         }
       }
   },
-    // SEND
-    // NP_KT_JV>lobby>connectfour>move>name&index
-
-    //receiver
-    //NP_KT_JV>lobby>connectfour>aftermove>color&x&y&turn
     async drop(index) {
       try {
-        await this.publisher.send(`NP_KT_JV>lobby>connectfour>move>${this.username}&${index}`);
+        await this.publisher.send(`${constants.topics.games.CF.MOVE}${this.username}&${index}`);
       } catch (error) {
         console.log(error);
       }

@@ -109,6 +109,9 @@
 </template>
 
 <script>
+
+import constants from '../constants';
+
 const zmq = require('zeromq');
 
 export default {
@@ -131,9 +134,9 @@ export default {
   },
   async mounted() {
     try {
-      await this.subscriber.connect('tcp://193.190.154.184:24042');
-      await this.subscriber.subscribe('NP_KT_JV>lobby>tic-tac-toe>');
-      await this.publisher.connect('tcp://193.190.154.184:24041');
+      await this.subscriber.connect(constants.broker.SERVER_PUB);
+      await this.subscriber.subscribe(constants.topics.BASE_TOPIC);
+      await this.publisher.connect(constants.broker.SERVER_PULL);
     } catch (error) {
       console.log(error);
     }
@@ -141,16 +144,18 @@ export default {
     /* eslint-disable */
     for await (const messages of this.subscriber) {
       // TODO : MAKE TOPIC TO info>join>name
-      if (messages.toString().includes('tic-tac-toe>info>join>')) {
-        const [, status] = messages.toString().split('NP_KT_JV>lobby>tic-tac-toe>info>join>');
+      if (messages.toString().includes(constants.topics.games.TTT.JOIN.BASE)) {
+        const [, status] = messages.toString().split(constants.topics.games.TTT.JOIN.BASE);
         if (status === 'full') {
           this.waiting = false;
         }
-      } else if (messages.toString().includes('NP_KT_JV>lobby>tic-tac-toe>gameupdate>')) {
+      } else if (messages.toString().includes(constants.topics.games.TTT.GAME_UPDATE)) {
         // We Get this: NP_KT_JV>lobby>tic-tac-toe>gameupdate>Kasper&0&0&X
-        let gameUpdate = messages.toString().replace('NP_KT_JV>lobby>tic-tac-toe>gameupdate>', '');
+        let gameUpdate = messages.toString().replace(constants.topics.games.TTT.GAME_UPDATE, '');
         let [playerTurn, x, y, X_O_Move, winner, winType] = gameUpdate.toString().split('&');
         //this.board[x][y] = X_O_Move.toString();
+        console.log(gameUpdate);
+        
         this.playerturn = playerTurn;
         if (winner != 'no-winner') {
           this.typeOfWin = winType;
@@ -170,7 +175,7 @@ export default {
     },
     async place(id) {
       // SEND: NP_KT_JV>lobby>tic-tac-toe>place>Jens&ttt-11>
-      await this.publisher.send(`NP_KT_JV>lobby>tic-tac-toe>place>${this.username}&${id}`);
+      await this.publisher.send(`${constants.topics.games.TTT.PLACE}${this.username}&${id}`);
     },
   },
 };

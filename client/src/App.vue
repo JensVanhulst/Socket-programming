@@ -79,6 +79,8 @@
 </template>
 
 <script>
+import constants from './constants';
+
 const zmq = require('zeromq');
 
 export default {
@@ -103,15 +105,15 @@ export default {
       this.user = '';
     }
     const subsciber = new zmq.Subscriber();
-    await subsciber.connect('tcp://193.190.154.184:24042');
-    await subsciber.subscribe('NP_KT_JV>lobby>filtered_messages>');
-    await subsciber.subscribe('NP_KT_JV>lobby>message>meme>');
-    await this.publisher.connect('tcp://193.190.154.184:24041');
+    await subsciber.connect(constants.broker.SERVER_PUB);
+    await subsciber.subscribe(constants.topics.chat.FILTERED_MESSAGES);
+    await subsciber.subscribe(constants.topics.chat.MEME);
+    await this.publisher.connect(constants.broker.SERVER_PULL);
 
     /* eslint-disable */
     for await (const messages of subsciber) {
       if (messages.toString().includes('>meme')) {
-        const [, meme] = messages.toString().split('NP_KT_JV>lobby>message>meme>');
+        const [, meme] = messages.toString().split(constants.topics.chat.MEME);
         const [name, url] = meme.split('&');
 
         if (name === this.user) {
@@ -119,7 +121,7 @@ export default {
           this.overlayMeme = true;
         }
       } else if (messages.toString().includes('filtered_messages')) {
-        const [, msg] = messages.toString().split('NP_KT_JV>lobby>filtered_messages>');
+        const [, msg] = messages.toString().split(constants.topics.chat.FILTERED_MESSAGES);
         const [name, message] = msg.split('&');
         this.items.push({ title: name, subtitle: message });
         this.items.push({ divider: true, inset: true });
@@ -128,7 +130,7 @@ export default {
   },
   methods: {
     async sendMessage() {
-      await this.publisher.send(`NP_KT_JV>lobby>raw_messages>${this.user}&${this.chatMessage}`);
+      await this.publisher.send(`${constants.topics.chat.RAW_MESSAGES}${this.user}&${this.chatMessage}`);
       this.chatMessage = '';
     },
   },

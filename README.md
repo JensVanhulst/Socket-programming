@@ -34,6 +34,7 @@ This is a web-based ZeroMQ game lobby with chat functionality and 2 games. [TicT
 ## Table of Contents
 - [GameLobby](#gamelobby)
   - [Table of Contents](#table-of-contents)
+  - [- REFACTOR](#ullirefactorliul)
   - [Getting Started](#getting-started)
   - [Installation & setup](#installation--setup)
   - [Installation for development](#installation-for-development)
@@ -48,6 +49,7 @@ This is a web-based ZeroMQ game lobby with chat functionality and 2 games. [TicT
   - [Questions](#questions)
   - [Issues](#issues)
   - [License](#license)
+  - [REFACTOR](#refactor)
 ---
 
 ## Getting Started
@@ -169,3 +171,9 @@ To create a new issue please follow the issue templates provided.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
+## REFACTOR
+
+- [x] CHAT
+- [ ] CONNECT_FOUR
+- [ ] TIC_TAC_TOE

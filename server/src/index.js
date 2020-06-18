@@ -1,15 +1,14 @@
  /** @format */
 require('dotenv').config();
-const { socket, topics, push } = require('./utils');
+const { socket, push } = require('./utils');
+const constants = require('./constants/index.js');
 const handlers = require('./handlers');
 
 const run = async () => {
   try {
-    await socket.connect('tcp://193.190.154.184:24042');
-    await socket.subscribe(topics.RAW_MESSAGES);
-    await socket.subscribe(topics.CONNECT_FOUR);
-    await socket.subscribe(topics.TICTACTOE_JOIN);
-    await push.connect('tcp://193.190.154.184:24041');
+    await socket.subscribe(constants.topics.BASE_TOPIC);
+    await push.connect(constants.broker.SERVER_PULL);
+    await socket.connect(constants.broker.SERVER_PUB);
 
     console.log('[INFO] - Connected and subscibed to all topics !');
     console.log('[INFO] - Publisher connected !');
@@ -19,11 +18,13 @@ const run = async () => {
 
   //NP_KT_JV>lobby>connectfour>join
   for await (const messages of socket) {
-    if (messages.toString().includes(topics.RAW_MESSAGES)) {
+    if (messages.toString().includes(constants.topics.BASE_TOPIC + constants.topics.chat.RAW_MESSAGES)) {
       handlers.handleChatMessage(messages);
-    } else if (messages.toString().includes(topics.CONNECT_FOUR_JOIN)) {
+
+    } else if (messages.toString().includes(constants.topics.BASE_TOPIC + constants.topics.games.CF.BASE)) {
       handlers.handleConnectFour(messages);
-    } else if (messages.toString().includes(topics.TICTACTOE_JOIN)) {
+
+    } else if (messages.toString().includes(constants.topics.BASE_TOPIC + constants.topics.games.TTT.BASE)) {
       handlers.handleTicTacToe(messages);
     }
   }

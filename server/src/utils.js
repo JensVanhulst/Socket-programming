@@ -1,11 +1,9 @@
-/** @format */
-
-const topics = require('./constants/topics');
 const zmq = require('zeromq');
 const filter = require('./filter/badWords');
 
 const socket = new zmq.Subscriber();
 const push = new zmq.Push();
+const constants = require('./constants/index');
 
 const filterMessage = async (name, message) => {
   const originalMessage = message.toString().split(' ');
@@ -31,17 +29,16 @@ const filterMessage = async (name, message) => {
   try {
     if(hasBadWord)
     {
-      await push.send(topics.RASPBERRY + name + " wrote a bad word.");
-      await push.send(topics.FILTERED_MESSAGES + '👮‍♀️🚨- SYSTEM - 🚨👮‍♀️' + '&' + "PLEASE NO BAD WORDS IN MY CHAT");
+      await push.send(constants.topics.raspberry.BASE_RASP + constants.topics.raspberry.RASPBERRY + name + ' wrote a bad word.');
+      await push.send(constants.topics.BASE_TOPIC + constants.topics.chat.FILTERED_MESSAGES + '👮‍♀️🚨- SYSTEM - 🚨👮‍♀️' + '&' + 'PLEASE NO BAD WORDS IN MY CHAT');
     }
-    await push.send(topics.FILTERED_MESSAGES + name + '&' + filtered.toString().replace(/,/g, " "));
+    await push.send(constants.topics.BASE_TOPIC + constants.topics.chat.FILTERED_MESSAGES + name + '&' + filtered.toString().replace(/,/g, " "));
   } catch (error) {
     console.log(error);
   }
 };
 
 module.exports = {
-  topics,
   socket,
   push,
   filterMessage,

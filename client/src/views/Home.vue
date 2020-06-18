@@ -39,6 +39,8 @@
 </template>
 
 <script>
+import constants from '../constants';
+
 const zmq = require('zeromq');
 
 export default {
@@ -56,24 +58,25 @@ export default {
   },
   async mounted() {
     try {
-      await this.subscriber.connect('tcp://193.190.154.184:24042');
-      await this.subscriber.subscribe('NP_KT_JV>lobby>');
-      await this.publisher.connect('tcp://193.190.154.184:24041');
+      await this.subscriber.connect(constants.broker.SERVER_PUB);
+      await this.subscriber.subscribe(constants.topics.BASE_TOPIC);
+      await this.publisher.connect(constants.broker.SERVER_PULL);
     } catch (error) {
       console.log(error);
     }
     /* eslint-disable */
     for await (const messages of this.subscriber) {
-      if (messages.toString().includes('connectfour>info>join>')) {
-        const [, status] = messages.toString().split('NP_KT_JV>lobby>connectfour>info>join>');
+      if (messages.toString().includes(constants.topics.games.CF.JOIN.BASE)) {
+        const [, status] = messages.toString().split(constants.topics.games.CF.JOIN.BASE);
 
         if (status === `succes&${this.username}`) {
+          console.log(status);
           this.$router.push({ name: 'ConnectFour' });
         } else if (status === 'full') {
           this.modal = true;
         }
-      } else if (messages.toString().includes('tic-tac-toe>info>join>')) {
-        const [, status] = messages.toString().split('NP_KT_JV>lobby>tic-tac-toe>info>join>');
+      } else if (messages.toString().includes(constants.topics.games.TTT.JOIN.BASE)) {
+        const [, status] = messages.toString().split(constants.topics.games.TTT.JOIN.BASE);
 
         if (status === `succes&${this.username}`) {
           this.$router.push({ name: 'TicTacToe' });
@@ -86,14 +89,14 @@ export default {
   methods: {
     async join() {
       try {
-        await this.publisher.send(`NP_KT_JV>lobby>connectfour>join>player>${this.username}`);
+        await this.publisher.send(`${constants.topics.games.CF.JOIN.PLAYER}${this.username}`);
       } catch (error) {
         console.log(error);
       }
     },
     async joinTicTacToe() {
       try {
-        await this.publisher.send(`NP_KT_JV>lobby>tic-tac-toe>join>player>${this.username}`);
+        await this.publisher.send(`${constants.topics.games.TTT.JOIN.PLAYER}${this.username}`);
       } catch (error) {
         console.log(error);
       }
