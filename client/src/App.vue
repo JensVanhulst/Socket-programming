@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- TODO: BACK BEFORE WIN -->
-    <v-app-bar app clipped-right color="primary" dark>
+    <v-app-bar app clipped-right clipped-left color="primary" dark>
       <!-- <v-icon @click="$router.push({ path: '/' })" v-if="$route.name !== 'Home'">
         mdi-arrow-left-thick
       </v-icon> -->
@@ -48,6 +48,47 @@
           </v-row>
         </v-container>
       </template>
+    </v-navigation-drawer>
+
+    <v-navigation-drawer class="bg-lightgrey" app overflow left clipped permanent width="300px">
+      <v-container>
+        <v-list-item class="bg-grey">
+          <v-list-item-content>
+            <v-list-item-title class="title text-center">
+              CHANNELS
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-container>
+
+      <v-list dense nav>
+        <v-list-item >
+          <v-list-item-icon link @click="joinSession('general-chat-#123')">
+            <v-icon>mdi-chat</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>General chat</v-list-item-title>
+          </v-list-item-content>
+           <v-list-item-icon>
+            <v-icon @click="leaveSession('general-chat-#123')">mdi-close</v-icon>
+          </v-list-item-icon>
+        </v-list-item>
+
+        <v-divider></v-divider>
+
+        <v-list-item >
+          <v-list-item-icon>
+            <v-icon>mdi-heart</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content link @click="joinSession('Discussions-chat-#423')">
+            <v-list-item-title>Discussions</v-list-item-title>
+          </v-list-item-content>
+          <v-list-item-icon>
+            <v-icon @click="leaveSession('Discussions-chat-#423')">mdi-close</v-icon>
+          </v-list-item-icon>
+        </v-list-item>
+        <v-divider></v-divider>
+      </v-list>
     </v-navigation-drawer>
     <v-content>
       <transition name="fade" mode="out-in">
@@ -130,9 +171,29 @@ export default {
   },
   methods: {
     async sendMessage() {
-      await this.publisher.send(`${constants.topics.chat.RAW_MESSAGES}${this.user}&${this.chatMessage}`);
+      await this.publisher.send(
+        `${constants.topics.chat.RAW_MESSAGES}${this.user}&${this.chatMessage}`,
+      );
       this.chatMessage = '';
     },
+    async joinSession(id) {
+      try {
+        await this.publisher.send(`${constants.topics.chat.JOIN.SESSION_TOPIC}${id}&${this.user}`);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async leaveSession(id) {
+      try {
+         await this.publisher.send(`EXJ>NP_KT_JV>lobby>channel>leave>${id}&${this.user}`);
+         console.log("send");
+         
+      } catch (error) {
+        console.log(error);
+        
+      }
+     
+    } 
   },
 };
 </script>

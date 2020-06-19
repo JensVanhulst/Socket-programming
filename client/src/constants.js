@@ -1,6 +1,6 @@
 /** @format */
 /* eslint-disable */
-const BASE_TOPIC = 'NP_KT_JV>lobby>';
+const BASE_TOPIC = 'EXJ>NP_KT_JV>lobby>';
 
 export default {
   broker: {
@@ -10,11 +10,16 @@ export default {
 
   topics: {
     BASE_TOPIC,
+    TEST_TOPIC: BASE_TOPIC + 'benternet>push>message>',
+    TEST_SUB_TOPIC: BASE_TOPIC + 'benternet>sub>topic>',
 
     chat: {
       RAW_MESSAGES: BASE_TOPIC + 'raw_messages>',
       FILTERED_MESSAGES: BASE_TOPIC + 'filtered_messages>',
       MEME: BASE_TOPIC + 'message>meme>',
+      JOIN: {
+        SESSION_TOPIC: BASE_TOPIC + 'channel>join>',
+      }
     },
 
     games: {

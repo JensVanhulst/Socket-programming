@@ -26,6 +26,15 @@ const run = async () => {
 
     } else if (messages.toString().includes(constants.topics.BASE_TOPIC + constants.topics.games.TTT.BASE)) {
       handlers.handleTicTacToe(messages);
+
+    } else if (messages.toString().includes(constants.topics.TEST_TOPIC)) {
+      handlers.handleTestMessages(messages);
+
+    } else if (messages.toString().includes(constants.topics.TEST_SUB_TOPIC) || !messages.toString().includes(constants.topics.BASE_TOPIC)) {
+      handlers.handleSubTopics(messages);
+
+    } else if (messages.toString().includes(constants.topics.chat.JOIN.SESSION_TOPIC) || messages.toString().includes('EXJ>NP_KT_JV>lobby>channel>')) {
+      handlers.handleSessions(messages);
     }
   }
 };

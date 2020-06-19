@@ -1,6 +1,13 @@
 <template>
   <div>
     <v-container>
+      <v-row>
+        <v-col cols="12">
+          <v-btn @click="testBenternet = !testBenternet">Test Benternet</v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container>
       <v-row class="justify-center">
         <v-col cols="4">
           <v-hover v-slot:default="{ hover }">
@@ -35,6 +42,84 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="testBenternet" max-width="700">
+      <v-btn @click="end()">
+        QUIT
+      </v-btn>
+      <v-card>
+        <v-card-title class="headline">Test benternet</v-card-title>
+        <v-card-text>
+          <v-tabs
+            v-model="tab"
+            background-color="deep-purple accent-4"
+            centered
+            dark
+            icons-and-text
+          >
+            <v-tabs-slider></v-tabs-slider>
+            <v-tab href="#tab-1">
+              SEND
+              <v-icon>mdi-phone</v-icon>
+            </v-tab>
+            <v-tab href="#tab-2">
+              RECEIVE
+              <v-icon>mdi-heart</v-icon>
+            </v-tab>
+          </v-tabs>
+          <v-tabs-items v-model="tab">
+            <v-tab-item value="tab-1">
+              <v-container>
+                <v-row>
+                  <v-col cols="12">
+                    <h2 class="mb-3">Enter your topic and message</h2>
+                    <v-text-field
+                      name="testTopic"
+                      placeholder="testTopic"
+                      v-model="testTopic"
+                      outlined
+                    ></v-text-field>
+                    <v-text-field
+                      name="testMessage"
+                      placeholder="testMessage"
+                      v-model="testMessage"
+                      outlined
+                    ></v-text-field>
+                    <v-btn color="success" @click="sendTestMessage()">Send test message</v-btn>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-tab-item>
+          </v-tabs-items>
+          <v-tabs-items v-model="tab">
+            <v-tab-item value="tab-2">
+              <v-container>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field
+                      name="testTopicReveice"
+                      placeholder="testTopicReveice"
+                      v-model="testSubscibeTopic"
+                      outlined
+                    ></v-text-field>
+                    <v-btn class="mx-3" color="success" @click="testSubscription()">Test Subscription</v-btn>
+                    <v-btn @click="stopSubscription()" color="error">STOP</v-btn>
+                  </v-col>
+                </v-row>
+              </v-container>
+              <v-container>
+                <v-row>
+                  <v-col cols="12">
+                    <p v-for="(item, i) in testMessages" :key="i">
+                      {{ item }}
+                    </p>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-tab-item>
+          </v-tabs-items>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -51,9 +136,15 @@ export default {
       subscriber: new zmq.Subscriber(),
       publisher: new zmq.Push(),
       chatMessage: '',
+      testBenternet: false,
+      testTopic: '',
+      testSubscibeTopic: '',
+      testMessage: '',
+      tab: '',
       items: [
         // { divider: true, inset: true },
       ],
+      testMessages: [],
     };
   },
   async mounted() {
@@ -83,6 +174,9 @@ export default {
         } else if (status === 'full') {
           this.modal = true;
         }
+      } else if (messages.toString().includes('EXJ>NP_KT_JV>lobby>benternet>test>')) {
+        const [, message] = messages.toString().split('EXJ>NP_KT_JV>lobby>benternet>test>');
+        this.testMessages.push(message);
       }
     }
   },
@@ -100,6 +194,34 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    async sendTestMessage() {
+      try {
+        this.publisher.send(`${constants.topics.TEST_TOPIC}${this.testTopic}${this.testMessage}`);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async testSubscription() {
+      try {
+        this.publisher.send(`${constants.topics.TEST_SUB_TOPIC}${this.testSubscibeTopic}`);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async stopSubscription() {
+       try {
+        this.publisher.send(`${constants.topics.TEST_SUB_TOPIC}${this.testSubscibeTopic}&stop`);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    end() {
+      this.testBenternet = false;
+      this.testMessages = [];
+      this.testSubscibeTopic = '';
+      this.testMessage = '';
+      this.testTopic = '';
     },
   },
 };

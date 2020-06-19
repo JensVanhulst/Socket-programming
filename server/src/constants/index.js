@@ -1,5 +1,5 @@
 /** @format */
-const BASE_TOPIC = 'NP_KT_JV>lobby>';
+const BASE_TOPIC = 'EXJ>NP_KT_JV>lobby>';
 
 module.exports = {
   broker: {
@@ -9,6 +9,8 @@ module.exports = {
 
   topics: {
     BASE_TOPIC,
+    TEST_TOPIC: BASE_TOPIC + 'benternet>push>message>',
+    TEST_SUB_TOPIC: BASE_TOPIC + 'benternet>sub>topic>',
 
     raspberry: {
       // Base_RASP
@@ -20,7 +22,10 @@ module.exports = {
     chat: {
       RAW_MESSAGES: 'raw_messages>',
       FILTERED_MESSAGES: 'filtered_messages>',
-      MEME : 'message>meme>'
+      MEME : 'message>meme>',
+      JOIN: {
+        SESSION_TOPIC: BASE_TOPIC + 'channel>join>',
+      }
     },
 
     games: {
