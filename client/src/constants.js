@@ -1,6 +1,6 @@
 /** @format */
 /* eslint-disable */
-const BASE_TOPIC = 'NP_KT_JV>lobby>';
+const BASE_TOPIC = 'EXK>NP_KT_JV>lobby>';
 
 export default {
   broker: {

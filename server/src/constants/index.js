@@ -1,5 +1,5 @@
 /** @format */
-const BASE_TOPIC = 'NP_KT_JV>lobby>';
+const BASE_TOPIC = 'EXK>NP_KT_JV>lobby>';
 
 module.exports = {
   broker: {
