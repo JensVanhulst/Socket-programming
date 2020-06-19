@@ -19,6 +19,18 @@
             </v-card>
           </v-hover>
         </v-col>
+
+        <v-col cols="4">
+          <v-hover v-slot:default="{ hover }">
+            <v-card
+              @click="joinTicTacToeAI"
+              :elevation="hover ? 16 : 2"
+              class="game-card-ai"
+              height="300px"
+            >
+            </v-card>
+          </v-hover>
+        </v-col>
       </v-row>
     </v-container>
     <v-dialog v-model="modal" max-width="290">
@@ -101,6 +113,14 @@ export default {
         console.log(error);
       }
     },
+
+    async joinTicTacToeAI() {
+      try {
+        await this.publisher.send(`${constants.topics.games.TTT.JOIN.PLAYER_AND_AI}${this.username}`);
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 </script>
@@ -114,6 +134,16 @@ export default {
   background-size: cover;
   background-image: url('https://store-images.s-microsoft.com/image/apps.41929.13682804428841430.68f0af32-8ea6-49bc-b838-d812036d39e9.80b85532-1417-4579-9726-abd1699a6297?mode=scale&q=90&h=1080&w=1920');
 }
+
+.game-card-ai {
+  &:hover {
+    cursor: pointer;
+  }
+  background-position: center;
+  background-size: cover;
+  background-image: url('https://specials-images.forbesimg.com/imageserve/1138781799/960x0.jpg?fit=scale');
+}
+
 
 .game-card-2 {
   &:hover {

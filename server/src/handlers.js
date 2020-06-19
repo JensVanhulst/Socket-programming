@@ -8,12 +8,19 @@ const { filterMessage, push } = require('./utils');
 const constants = require('./constants/index');
 const connectFour = new ConnectFour(2);
 const ticTacToe = new TicTacToe(2);
-
+let AI_VAL;
 const handleTicTacToe = async (messages) => {
   const [, command] = messages.toString().split(constants.topics.games.TTT.BASE);
-  
+
+  console.log("COMMAND: " + command);
+  // vsAI>player>Kasper
+  // OR
+  // join>player>Kasper
+
   if (command.includes(constants.topics.games.TTT.JOIN.BASE)) {
+    AI_VAL = 0;
     const [, name] = command.split(constants.topics.games.TTT.JOIN.BASE);
+    console.log("NAME_NORMAL: " + name);
 
     if (ticTacToe.gPlayerAmount < 2) {
       ticTacToe.addPlayer(name);
@@ -25,6 +32,23 @@ const handleTicTacToe = async (messages) => {
       }, 2000); 
     }
   }
+
+  else if (command.includes(constants.topics.games.TTT.JOIN.BASE_AI)) {
+    AI_VAL = 1;
+    const [, name] = command.split(constants.topics.games.TTT.JOIN.BASE_AI);
+    console.log("NAME_AI: " + name);
+    if (ticTacToe.gPlayerAmount < 2) {
+      ticTacToe.addPlayer(name);
+      ticTacToe.addPlayer("AI");
+      await push.send(`${constants.topics.games.TTT.JOIN.SUCCES}${name}`);
+    }
+    if (ticTacToe.gPlayerAmount == 2) {
+      setTimeout(async () => {
+        await push.send(constants.topics.games.TTT.JOIN.FULL);
+      }, 2000); 
+    }
+  }
+
   else if(command.includes(constants.topics.games.TTT.PLACE)) {
     console.log(ticTacToe.gPlayerAmount);
     const arguments = messages.toString().replace(constants.topics.BASE_TOPIC + constants.topics.games.TTT.BASE + constants.topics.games.TTT.PLACE, '');
@@ -40,15 +64,55 @@ const handleTicTacToe = async (messages) => {
       ticTacToe.reset();
     }
     try {
+      await push.send(constants.topics.raspberry.RASPBERRY_PLAYERTURN);
       await push.send(
         `${constants.topics.games.TTT.GAME_UPDATE}${serverResponse.playerTurn}&${serverResponse.x}&${serverResponse.y}&${serverResponse.X_O_Move}&${serverResponse.winner}&${serverResponse.type}`
-        
-        //`${constants.topics.games.TTT.GAME_UPDATE}${serverResponse.playerTurn}&${serverResponse.x}&${serverResponse.y}&${serverResponse.X_O_Move}&${serverResponse.winner}&${serverResponse.type}`,
       );
     } catch (error) {
       console.log(error);
     }
+    // AI
+    if(AI_VAL == 1)
+    {
+      const X_AI = Math.floor(Math.random() * 3); 
+      const Y_AI = Math.floor(Math.random() * 3); 
+      const serverResponseAI = ticTacToe.place("AI", X_AI, Y_AI);
+      console.log('SRV :' + JSON.stringify(serverResponseAI))
+      if(serverResponseAI.winner !== 'no-winner') 
+      {
+        ticTacToe.reset();
+      }
+      try {
+        await push.send(constants.topics.raspberry.RASPBERRY_PLAYERTURN);
+        await push.send(
+          `${constants.topics.games.TTT.GAME_UPDATE}${serverResponseAI.playerTurn}&${serverResponseAI.x}&${serverResponseAI.y}&${serverResponseAI.X_O_Move}&${serverResponseAI.winner}&${serverResponseAI.type}`
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
+
+  else if(command.includes(constants.topics.raspberry.RASPBERRY_PUSHBUTTON)) {
+    // AI
+    const X_AI = Math.floor(Math.random() * 3); 
+    const Y_AI = Math.floor(Math.random() * 3); 
+    const serverResponseAI = ticTacToe.place("AI", X_AI, Y_AI);
+    console.log('SRV :' + JSON.stringify(serverResponseAI))
+    if(serverResponseAI.winner !== 'no-winner') 
+    {
+      ticTacToe.reset();
+    }
+    try {
+      await push.send(constants.topics.raspberry.RASPBERRY_PLAYERTURN);
+      await push.send(
+        `${constants.topics.games.TTT.GAME_UPDATE}${serverResponseAI.playerTurn}&${serverResponseAI.x}&${serverResponseAI.y}&${serverResponseAI.X_O_Move}&${serverResponseAI.winner}&${serverResponseAI.type}`
+      );
+    } catch (error) {
+      console.log(error);
+  }
+  }
+
 };
 
 const handleConnectFour = async (messages) => {

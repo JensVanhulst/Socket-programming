@@ -15,6 +15,9 @@ module.exports = {
       BASE_RASP: 'NP_KT_JV>',
       // Raspberry
       RASPBERRY : 'raspberry>alerts>',
+      // EXTRA RASP
+      RASPBERRY_PLAYERTURN : 'EXK>NP_KT_JV>raspberry>tic-tac-toe>playerturn>',
+      RASPBERRY_PUSHBUTTON : 'EXK>NP_KT_JV>raspberry>tic-tac-toe>pushbtn>',
     },
 
     chat: {
@@ -41,6 +44,7 @@ module.exports = {
         BASE : 'tic-tac-toe>',
         JOIN: {
           BASE: 'join>player>',
+          BASE_AI: 'vsAI>player>',
           SUCCES : BASE_TOPIC + 'tic-tac-toe>info>join>succes&',
           FULL : BASE_TOPIC + 'tic-tac-toe>info>join>full'
         },

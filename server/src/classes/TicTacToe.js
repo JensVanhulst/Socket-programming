@@ -105,9 +105,21 @@ class TicTacToe {
       this.board[x][y] = 'X';
       playerTurn = this.players[1];
     } else if (name === this.players[1]) {
-      this.board[x][y] = 'O';
-      playerTurn = this.players[0];
+      /*
+      if(name == "AI") {
+        console.log("IN AI");
+        const AI_X = Math.floor(Math.random() * 3);
+        const AI_Y = Math.floor(Math.random() * 3);
+        this.board[x][0] = 'O';
+        playerTurn = this.players[0];
+      }
+      else {
+      */
+        this.board[x][y] = 'O';
+        playerTurn = this.players[0];
+      //}
     }
+
 
     X_O_Move = this.board[x][y];
 

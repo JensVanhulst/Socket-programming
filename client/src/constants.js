@@ -34,6 +34,7 @@ export default {
         JOIN: {
           BASE: BASE_TOPIC + 'tic-tac-toe>info>join>',
           PLAYER: BASE_TOPIC + 'tic-tac-toe>join>player>',
+          PLAYER_AND_AI: BASE_TOPIC + 'tic-tac-toe>vsAI>player>',
         },
         PLACE: BASE_TOPIC + 'tic-tac-toe>place>',
         GAME_UPDATE: BASE_TOPIC + 'tic-tac-toe>gameupdate>',
